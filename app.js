@@ -8,25 +8,29 @@ const colors = require('colors');
 const notes = require('./notes.js');
 
 const argv = yargs.argv;
-var command = argv._[0];
+let command = argv._[0];
 
 if (command === 'add') {
-  var note = notes.addNote(argv.title, argv.body);
+  let note = notes.addNote(argv.title, argv.body);
   if (note) {
     console.log('Note created'.green);
-    console.log('--');
-    console.log(`Title: ${note.title}`);
-    console.log(`Body: ${note.body}`);
+    notes.logNotes(note);
   } else {
     console.log('Note title taken'.bgRed);
   }
 } else if (command === 'list') {
   notes.getAll();
 } else if (command === 'read') {
-  notes.getNote(argv.title);
+  let note = notes.getNote(argv.title);
+  if(_.isUndefined(note)){
+    console.log("Note is not found".red);
+  }else{
+    console.log("NOTE DETAILS".blue);
+    notes.logNotes(note);
+  }
 } else if (command === 'remove') {
-  var noteRemoved = notes.removeNote(argv.title);
-  var message = noteRemoved ? 'Note was removed'.green : 'Note not found'.bgRed;
+  let noteRemoved = notes.removeNote(argv.title);
+  let message = noteRemoved ? 'Note was removed'.green : 'Note not found'.bgRed;
   console.log(message);
 } else {
   console.log('Command not recognized');
